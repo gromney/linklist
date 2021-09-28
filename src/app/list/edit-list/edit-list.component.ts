@@ -19,12 +19,11 @@ export class EditListComponent implements OnInit {
 
   constructor(private fb: FormBuilder, private http: HttpClient, private route: Router, private el: ElementRef) {
     this.linkLstFrm = this.fb.group({
-      title: [''],
+      title: ['',[Validators.required,Validators.pattern('^[A-Za-z0-9_-]*($|\\s)')]],
       description: [''],
       url_input: ['', Validators.pattern(urlRegex)],
       links: this.fb.array([], Validators.required)
     });
-
 
     let collection = this.route.getCurrentNavigation()?.extras.state as ILinkList;
     if (collection) {
@@ -72,6 +71,7 @@ export class EditListComponent implements OnInit {
       );
   }
 
+  
 
 
   showControlError(name: string): boolean {
