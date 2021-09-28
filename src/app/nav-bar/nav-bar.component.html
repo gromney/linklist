@@ -1,0 +1,44 @@
+<header class="container ">
+    <nav class="navbar box" role="navigation" aria-label="main navigation">
+        <div class="navbar-brand">
+            <a class="navbar-item" href="/">
+                <span class="has-text-weight-bold">
+                    Link List
+                </span>
+            </a>
+        </div>
+        <div class="navbar-menu">
+            <div class="navbar-start">
+                <a class="navbar-item" [routerLink]="['edit']">
+                    <span class="material-icons">
+                        add_circle
+                    </span>
+                    <span>New</span>
+
+                </a>
+                <a class="navbar-item" [routerLink]="['collections']" >
+                    <span class="material-icons icon">
+                        account_circle
+                    </span>
+                    <span>My Collections</span>
+
+                </a>
+                <a class="navbar-item">
+                    <span class="material-icons icon">
+                        help
+                    </span>
+                    <span>About</span>
+
+                </a>
+            </div>
+            <div class="navbar-end">
+                <a class="button is-medium">
+                    <span class="material-icons icon">
+                        login
+                    </span>
+                    <span>Login</span>
+                </a>
+            </div>
+        </div>
+    </nav>
+</header>
