@@ -1,0 +1,28 @@
+.collections {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(18rem, 1fr));
+    gap: 2rem;
+    align-items: center;
+    .collection {
+        height: 15rem;
+        width: 20rem;
+
+        &-new {
+            display: grid;
+            justify-content: center;
+            align-content: center;
+
+            border: 4px;
+            border-color: gray;
+            border-style: dashed;
+        }
+        &-card {
+            padding: 2rem;
+
+            .links-count {
+                position: absolute;
+                top: -3rem;
+            }
+        }
+    }
+}

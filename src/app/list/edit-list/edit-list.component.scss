@@ -1,0 +1,21 @@
+.publish{
+    display: grid;
+    align-content: end;
+}
+
+.links-header{
+    display: grid;
+    grid-auto-flow: column;
+    padding-top: 2rem;
+}
+
+.link-list{
+    display: grid;
+    grid-auto-flow: row;
+    gap: 3rem;
+}
+.link{
+    
+    justify-content: center;
+    align-items: center;
+}

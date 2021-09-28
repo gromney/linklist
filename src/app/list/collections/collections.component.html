@@ -1,0 +1,35 @@
+<div class="section">
+    <div class="container">
+        <span class="title has-text-primary">My Collections</span>
+    </div>
+</div>
+<div class="container collections">
+
+    <a [routerLink]="['/edit']">
+        <div class="collection collection-new column">
+            <span class="material-icons has-text-centered">
+                add_circle
+            </span>
+            <span>
+                Create new collection
+            </span>
+        </div>
+    </a>
+    <div *ngFor="let collection of collections$ |async">
+        <a [routerLink]="['edit']" [state]="collection">
+            <div class="collection collection-card card">
+                <div class="container">
+                    <div class="links-count tag is-primary is-rounded is-size-6 has-text-weight-bold">
+                        {{collection.links?.length}} Links
+                    </div>
+                    <span class="collection-title subtitle">
+                        {{collection.title}}
+                    </span>
+                    <div class="span">
+                        {{collection.description}}
+                    </div>
+                </div>
+            </div>
+        </a>
+    </div>
+</div>

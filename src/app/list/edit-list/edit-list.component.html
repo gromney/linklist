@@ -1,0 +1,56 @@
+<form [formGroup]="linkLstFrm" class="form" #form="ngForm" (ngSubmit)="onPublish()">
+    <fieldset class="box">
+        <div class="container field-body">
+            <div class="field">
+                <label for="title" class="label">Link Title</label>
+                <input formControlName="title" type="text" class="input" required>
+                <small></small>
+            </div>
+            <div class="field">
+                <label for="description" class="label">Description</label>
+                <input formControlName="description" type="text" class="input">
+            </div>
+            <div class="publish">
+                <button class="button" type="submit" [disabled]="form.invalid">Publish</button>
+            </div>
+        </div>
+    </fieldset>
+    <fieldset class="container">
+        <div class="field">
+            <label for="url-input" class="label">Enter a link and press enter</label>
+            <input formControlName="url_input" (keydown.enter)="addLink($event.target)" type="text" id="url-input"
+                class="input is-large">
+            <small *ngIf="showControlError('url_input')">That doesn't look like a valid URL</small>
+        </div>
+    </fieldset>
+
+    <fieldset class="container">
+        <div class="links-header">
+            <h3 class="title has-text-primary">Links</h3>
+            <span class="has-text-right">Drag links to re-order</span>
+        </div>
+        <div class="link-list" formArrayName="links">
+            <div *ngFor="let link of linkList.controls;let i=index">
+                <div [formGroupName]="i">
+                    <div class="box link columns is-mobile">
+                        <div class="column is-narrow drag">
+                            <span class="material-icons">
+                                drag_indicator
+                            </span>
+                        </div>
+                        <div class="column link-main title">
+                            {{link.value.url}}
+                        </div>
+                        <div class="column is-narrow">
+                            <a (click)="removeLink(i)" class="button">
+                                <span class="material-icons">
+                                    delete
+                                </span>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </fieldset>
+</form>
