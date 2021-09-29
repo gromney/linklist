@@ -1,12 +1,13 @@
 import { HttpClient } from '@angular/common/http';
 import { Component, ElementRef, Input, OnInit, ViewChild } from '@angular/core';
-import { AbstractControl, FormArray, FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
+import { AbstractControl, AsyncValidatorFn, FormArray, FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
-import { finalize } from 'rxjs/operators';
+import { finalize, map, tap } from 'rxjs/operators';
+import { LinkListService } from 'src/app/common/services/link-list.service';
 import { ILinkList } from 'src/app/models/link-list.model';
 
 const urlRegex = '(https?://)?([\\da-z.-]+)\\.([a-z.]{2,6})[/\\w .-]*/?';
-
+const titleRegex = '^[A-Za-z0-9_-]*($|\\s)'
 
 @Component({
   selector: 'app-edit-list',
@@ -17,9 +18,15 @@ export class EditListComponent implements OnInit {
 
   linkLstFrm!: FormGroup;
 
-  constructor(private fb: FormBuilder, private http: HttpClient, private route: Router, private el: ElementRef) {
+  constructor(private fb: FormBuilder, private http: HttpClient, private route: Router, private el: ElementRef, private linkService: LinkListService) {
+
     this.linkLstFrm = this.fb.group({
-      title: ['',[Validators.required,Validators.pattern('^[A-Za-z0-9_-]*($|\\s)')]],
+      title: ['', {
+        validators: [Validators.required, Validators.pattern(titleRegex)
+        ],
+        asyncValidators: [avaliableValidator(linkService)],
+        updateOn: 'blur'
+      }],
       description: [''],
       url_input: ['', Validators.pattern(urlRegex)],
       links: this.fb.array([], Validators.required)
@@ -27,12 +34,12 @@ export class EditListComponent implements OnInit {
 
     let collection = this.route.getCurrentNavigation()?.extras.state as ILinkList;
     if (collection) {
-      
+
       let links = collection.links ? collection.links : [];
-      
+
       this.linkLstFrm.controls.title.setValue(collection.title);
       this.linkLstFrm.controls.description.setValue(collection.description);
-      
+
       this.linkLstFrm.setControl('links', this.fb.array(links));
     }
 
@@ -59,8 +66,8 @@ export class EditListComponent implements OnInit {
   }
 
   onPublish() {
-    console.log(this.linkLstFrm.value);
-    this.http.post('https://localhost:5001/api/linklist', this.linkLstFrm.value)
+
+    this.linkService.publish$(this.linkLstFrm.value)
       .pipe(
         finalize(() => this.clearForm())
       )
@@ -70,9 +77,6 @@ export class EditListComponent implements OnInit {
         () => console.log('COMPLETE')
       );
   }
-
-  
-
 
   showControlError(name: string): boolean {
     const control = this.linkLstFrm.get(name) as FormControl;
@@ -84,7 +88,6 @@ export class EditListComponent implements OnInit {
   }
 
   private newLink(url: string): FormGroup {
-
     const control = this.fb.group({
       url: url
     })
@@ -99,5 +102,26 @@ export class EditListComponent implements OnInit {
     control.focus();
   }
 
+  private goToInvalidControl() {
+    this.linkLstFrm.statusChanges.subscribe(x =>{
+      this.linkLstFrm.errors
+    })
+  }
+
+  get title() {
+    return this.linkLstFrm.controls['title'];
+  }
+
 }
 
+export function avaliableValidator(service: LinkListService): AsyncValidatorFn {
+  return (control: AbstractControl) => {
+
+    return service.available$(control.value)
+      .pipe(
+        map((available) => {
+          return available ? null : { avaliableValidator: 'That URL is already taken.' }
+        })
+      )
+  }
+}

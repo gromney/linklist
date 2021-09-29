@@ -4,7 +4,8 @@
             <div class="field">
                 <label for="title" class="label">Link Title</label>
                 <input formControlName="title" type="text" class="input" required>
-                <small></small>
+                <small *ngIf="title.errors?.pattern">Only letters, numbers and dashes</small>
+                <small *ngIf="title.errors?.avaliableValidator">That URL is already taken</small>
             </div>
             <div class="field">
                 <label for="description" class="label">Description</label>
