@@ -1,11 +1,10 @@
-<form [formGroup]="linkLstFrm" class="form" #form="ngForm" (ngSubmit)="onPublish()">
+<form [formGroup]="editForm" class="form" #form="ngForm" (ngSubmit)="onPublish()">
     <fieldset class="box">
         <div class="container field-body">
             <div class="field">
                 <label for="title" class="label">Link Title</label>
-                <input formControlName="title" type="text" class="input" required>
-                <small *ngIf="title.errors?.pattern">Only letters, numbers and dashes</small>
-                <small *ngIf="title.errors?.avaliableValidator">That URL is already taken</small>
+                <input formControlName="title" type="text" class="input" >
+
             </div>
             <div class="field">
                 <label for="description" class="label">Description</label>
@@ -15,14 +14,25 @@
                 <button class="button" type="submit" [disabled]="form.invalid">Publish</button>
             </div>
         </div>
-    </fieldset>
-    <fieldset class="container">
-        <div class="field">
-            <label for="url-input" class="label">Enter a link and press enter</label>
-            <input formControlName="url_input" (keydown.enter)="addLink($event.target)" type="text" id="url-input"
-                class="input is-large">
-            <small *ngIf="showControlError('url_input')">That doesn't look like a valid URL</small>
+        <div class="container control-message field-body">
+            <div class="field">
+                <small *ngIf="title.errors?.pattern">Only letters, numbers and dashes</small>
+                <small *ngIf="title.errors?.avaliableValidator">That URL is already taken</small>
+                <small *ngIf="updateMode" class="has-text-primary"> {{doc.location.host}}/{{title.value}} </small>
+            </div>
         </div>
+    </fieldset>
+    <fieldset>
+        <div class="container field-body">
+            <div class="field">
+                <label for="url-input" class="label">Enter a link and press enter</label>
+                <input formControlName="url_input" (keydown.enter)="$event.preventDefault();addLink($event.target)"
+                    type="text" id="url-input" class="input is-large">
+                    <small *ngIf="show_url_input_error">That doesn't look like a valid URL</small>
+            </div>
+
+        </div>
+
     </fieldset>
 
     <fieldset class="container">

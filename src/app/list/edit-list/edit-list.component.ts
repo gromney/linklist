@@ -1,5 +1,6 @@
+import { DOCUMENT } from '@angular/common';
 import { HttpClient } from '@angular/common/http';
-import { Component, ElementRef, Input, OnInit, ViewChild } from '@angular/core';
+import { Component, ElementRef, Inject, Input, OnInit, ViewChild } from '@angular/core';
 import { AbstractControl, AsyncValidatorFn, FormArray, FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { finalize, map, tap } from 'rxjs/operators';
@@ -15,12 +16,12 @@ const titleRegex = '^[A-Za-z0-9_-]*($|\\s)'
   styleUrls: ['./edit-list.component.scss']
 })
 export class EditListComponent implements OnInit {
+  updateMode = false;
+  editForm!: FormGroup;
 
-  linkLstFrm!: FormGroup;
+  constructor(private fb: FormBuilder, private http: HttpClient, private route: Router, private el: ElementRef, private linkService: LinkListService, @Inject(DOCUMENT) public doc: Document) {
 
-  constructor(private fb: FormBuilder, private http: HttpClient, private route: Router, private el: ElementRef, private linkService: LinkListService) {
-
-    this.linkLstFrm = this.fb.group({
+    this.editForm = this.fb.group({
       title: ['', {
         validators: [Validators.required, Validators.pattern(titleRegex)
         ],
@@ -34,31 +35,31 @@ export class EditListComponent implements OnInit {
 
     let collection = this.route.getCurrentNavigation()?.extras.state as ILinkList;
     if (collection) {
+      this.updateMode = true;
+      this.editForm.setControl('title', this.fb.control({ value: collection.title, disabled: true }, []));
 
       let links = collection.links ? collection.links : [];
 
-      this.linkLstFrm.controls.title.setValue(collection.title);
-      this.linkLstFrm.controls.description.setValue(collection.description);
+      this.editForm.controls.description.setValue(collection.description);
 
-      this.linkLstFrm.setControl('links', this.fb.array(links));
+      this.editForm.setControl('links', this.fb.array(links));
     }
 
   }
 
   ngOnInit(): void {
-
   }
 
   addLink(target: any) {
-    if (this.linkLstFrm.controls['url_input'].invalid) {
-      this.linkLstFrm.controls['url_input'].markAsTouched();
+    if (this.editForm.controls['url_input'].invalid) {
+      this.editForm.controls['url_input'].markAsTouched();
       return;
     }
 
     const newLink = this.newLink(target.value);
 
     this.linkList.push(newLink);
-    this.linkLstFrm.controls['url_input'].reset();
+    this.editForm.controls['url_input'].reset();
   }
 
   removeLink(i: number) {
@@ -67,9 +68,12 @@ export class EditListComponent implements OnInit {
 
   onPublish() {
 
-    this.linkService.publish$(this.linkLstFrm.value)
+    this.linkService.publish$(this.editForm.value)
       .pipe(
-        finalize(() => this.clearForm())
+        finalize(() => {
+          this.route.navigate(['/', this.title]);
+          this.clearForm()
+        })
       )
       .subscribe(
         res => console.log('RESPONSE:', res),
@@ -78,13 +82,8 @@ export class EditListComponent implements OnInit {
       );
   }
 
-  showControlError(name: string): boolean {
-    const control = this.linkLstFrm.get(name) as FormControl;
-    return control.invalid && control.dirty && control.touched;
-  }
-
   public get linkList(): FormArray {
-    return this.linkLstFrm.get('links') as FormArray;
+    return this.editForm.get('links') as FormArray;
   }
 
   private newLink(url: string): FormGroup {
@@ -96,20 +95,20 @@ export class EditListComponent implements OnInit {
   }
 
   private clearForm() {
-    this.linkLstFrm.setControl('links', this.fb.array([]));
+    this.editForm.reset();
+    this.editForm.setControl('links', this.fb.array([]));
 
     const control = this.el.nativeElement.querySelector('[formcontrolname="url_input"');
     control.focus();
   }
 
-  private goToInvalidControl() {
-    this.linkLstFrm.statusChanges.subscribe(x =>{
-      this.linkLstFrm.errors
-    })
+  get title() {
+    return this.editForm.controls['title'];
   }
 
-  get title() {
-    return this.linkLstFrm.controls['title'];
+  get show_url_input_error(): boolean {
+    const control = this.editForm.get('url_input') as FormControl;
+    return control.invalid && control.dirty && control.touched;
   }
 
 }
@@ -120,6 +119,8 @@ export function avaliableValidator(service: LinkListService): AsyncValidatorFn {
     return service.available$(control.value)
       .pipe(
         map((available) => {
+          console.log(available);
+
           return available ? null : { avaliableValidator: 'That URL is already taken.' }
         })
       )
