@@ -79,20 +79,21 @@ export class EditListComponent implements OnInit {
   }
 
   onPublish() {
-    if (this.updateMode) {
-      const title = this.editForm.controls.title.value;
-      console.log(title, this.editForm.value);
+    // I need the TITLE after the PUSH/PUT request
+    const keepedTitle = this.editForm.controls.title.value;
 
-      this.linkService.update$(title, this.editForm.value)
+    if (this.updateMode) {
+
+      this.linkService.update$(keepedTitle, this.editForm.value)
         .pipe(
           finalize(() => {
-            this.route.navigate(['/', title]);
+            this.route.navigate(['/', keepedTitle]);
           })
         )
         .subscribe(
-          res => console.log('RESPONSE:', res),
-          err => console.log('ERRROS:', err),
-          () => console.log('COMPLETE'),
+          res => console.log('RESPONSE UPDATE:', res),
+          err => console.log('ERROR DESE UPDATE:', err),
+          () => console.log('COMPLETE UPDATE'),
 
         )
 
@@ -101,14 +102,16 @@ export class EditListComponent implements OnInit {
       this.linkService.publish$(this.editForm.value)
         .pipe(
           finalize(() => {
-            this.route.navigate(['/', this.title]);
+            this.route.navigate(['/', keepedTitle]);
+            console.log('NAVEGAR A LA LISTA');
+            debugger;
             // this.clearForm()
           })
         )
         .subscribe(
-          res => console.log('RESPONSE:', res),
-          err => console.log('ERROR:', err),
-          () => console.log('COMPLETE')
+          res => console.log('RESPONSE PUBLISH:', res),
+          err => console.log('ERROR DESDE PUBLISH:', err),
+          () => console.log('COMPLETE PUBLISH')
         );
     }
 
@@ -152,8 +155,6 @@ export function avaliableValidator(service: LinkListService): AsyncValidatorFn {
     return service.available$(control.value)
       .pipe(
         map((available) => {
-          console.log(available);
-
           return available ? null : { avaliableValidator: 'That URL is already taken.' }
         })
       )

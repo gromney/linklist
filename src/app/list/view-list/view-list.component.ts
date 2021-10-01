@@ -23,7 +23,8 @@ export class ViewListComponent implements OnInit {
       .pipe(
         catchError((error) =>{
           this.router.navigate(['s/edit'])
-          return throwError(error);
+          
+          return throwError(`ERROR DESDE VIEWLIST: ${error}`);
         }),
         // finalize(()=> this.router.navigate(['/',title]))
       )
