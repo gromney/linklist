@@ -3,21 +3,22 @@
         <div class="container field-body">
             <div class="field">
                 <label for="title" class="label">Link Title</label>
-                <input formControlName="title" type="text" class="input" >
+                <input formControlName="title" type="text" class="input is-large"
+                    [ngClass]="{'is-danger' : (title.touched && title.invalid)}">
 
             </div>
             <div class="field">
                 <label for="description" class="label">Description</label>
-                <input formControlName="description" type="text" class="input">
+                <input formControlName="description" type="text" class="input is-large">
             </div>
             <div class="publish">
-                <button class="button" type="submit" [disabled]="form.invalid">Publish</button>
+                <button class="button is-large" type="submit" [disabled]="form.invalid || (loading.isLoading$|async)">Publish</button>
             </div>
         </div>
         <div class="container control-message field-body">
             <div class="field">
-                <small *ngIf="title.errors?.pattern">Only letters, numbers and dashes</small>
-                <small *ngIf="title.errors?.avaliableValidator">That URL is already taken</small>
+                <small *ngIf="title.errors?.pattern" class="has-text-danger">Only letters, numbers and dashes</small>
+                <small *ngIf="title.errors?.avaliableValidator" class="has-text-danger">That URL is already taken</small>
                 <small *ngIf="updateMode" class="has-text-primary"> {{doc.location.host}}/{{title.value}} </small>
             </div>
         </div>
@@ -27,8 +28,8 @@
             <div class="field">
                 <label for="url-input" class="label">Enter a link and press enter</label>
                 <input formControlName="url_input" (keydown.enter)="$event.preventDefault();addLink($event.target)"
-                    type="text" id="url-input" class="input is-large">
-                    <small *ngIf="show_url_input_error">That doesn't look like a valid URL</small>
+                    type="text" id="url-input" class="input is-large" [ngClass]="{'is-danger' : show_url_input_error}">
+                <small *ngIf="show_url_input_error" class="has-text-danger" >That doesn't look like a valid URL</small>
             </div>
 
         </div>

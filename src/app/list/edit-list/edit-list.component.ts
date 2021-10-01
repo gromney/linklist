@@ -5,6 +5,7 @@ import { AbstractControl, AsyncValidatorFn, FormArray, FormBuilder, FormControl,
 import { ActivatedRoute, Router } from '@angular/router';
 import { finalize, map, tap } from 'rxjs/operators';
 import { LinkListService } from 'src/app/common/services/link-list.service';
+import { LoadingService } from 'src/app/common/services/loading.service';
 import { ILinkList } from 'src/app/models/link-list.model';
 
 const urlRegex = '(https?://)?([\\da-z.-]+)\\.([a-z.]{2,6})[/\\w .-]*/?';
@@ -19,7 +20,7 @@ export class EditListComponent implements OnInit {
   updateMode = false;
   editForm!: FormGroup;
 
-  constructor(private fb: FormBuilder, private http: HttpClient, private route: Router, private el: ElementRef, private linkService: LinkListService, @Inject(DOCUMENT) public doc: Document) {
+  constructor(private fb: FormBuilder, private http: HttpClient, private route: Router, private el: ElementRef, private linkService: LinkListService, @Inject(DOCUMENT) public doc: Document, public loading: LoadingService) {
 
     this.buildForm();
 
@@ -80,35 +81,35 @@ export class EditListComponent implements OnInit {
   onPublish() {
     if (this.updateMode) {
       const title = this.editForm.controls.title.value;
-      console.log(title,this.editForm.value);
-      
-      this.linkService.update$(title,this.editForm.value)
+      console.log(title, this.editForm.value);
+
+      this.linkService.update$(title, this.editForm.value)
         .pipe(
           finalize(() => {
-            this.route.navigate(['/',title])
+            this.route.navigate(['/', title]);
           })
         )
         .subscribe(
-          res => console.log('RESPONSE:',res),
-          err => console.log('ERRROS:',err),
+          res => console.log('RESPONSE:', res),
+          err => console.log('ERRROS:', err),
           () => console.log('COMPLETE'),
-          
+
         )
 
     } else {
 
-      // this.linkService.publish$(this.editForm.value)
-      //   .pipe(
-      //     finalize(() => {
-      //       this.route.navigate(['/', this.title]);
-      //       this.clearForm()
-      //     })
-      //   )
-      //   .subscribe(
-      //     res => console.log('RESPONSE:', res),
-      //     err => console.log('ERROR:', err),
-      //     () => console.log('COMPLETE')
-      //   );
+      this.linkService.publish$(this.editForm.value)
+        .pipe(
+          finalize(() => {
+            this.route.navigate(['/', this.title]);
+            // this.clearForm()
+          })
+        )
+        .subscribe(
+          res => console.log('RESPONSE:', res),
+          err => console.log('ERROR:', err),
+          () => console.log('COMPLETE')
+        );
     }
 
 
