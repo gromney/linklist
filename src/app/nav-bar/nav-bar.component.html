@@ -6,8 +6,14 @@
                     Link List
                 </span>
             </a>
+            <a role="button" #navBurger (click)="toggleNavbar()" class="navbar-burger" aria-label="menu"
+                aria-expanded="false" data-target="navbarBasicExample">
+                <span aria-hidden="true"></span>
+                <span aria-hidden="true"></span>
+                <span aria-hidden="true"></span>
+            </a>
         </div>
-        <div class="navbar-menu">
+        <div id="navbar" #navMenu class="navbar-menu">
             <div class="navbar-start">
                 <a class="navbar-item" [routerLink]="['s/edit']">
                     <span class="material-icons">
@@ -16,7 +22,7 @@
                     <span>New</span>
 
                 </a>
-                <a class="navbar-item" [routerLink]="['s/collections']" >
+                <a class="navbar-item" [routerLink]="['s/collections']">
                     <span class="material-icons icon">
                         account_circle
                     </span>
@@ -32,12 +38,15 @@
                 </a>
             </div>
             <div class="navbar-end">
-                <a class="button is-medium">
-                    <span class="material-icons icon">
-                        login
-                    </span>
-                    <span>Login</span>
-                </a>
+                <div class="navbar-item" (click)="toggleNavbar()">
+                    <a class="button is-medium">
+                        <span class="material-icons icon">
+                            login
+                        </span>
+                        <span>Login</span>
+                    </a>
+                </div>
+
             </div>
         </div>
     </nav>
