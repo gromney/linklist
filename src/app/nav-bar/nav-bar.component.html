@@ -22,7 +22,7 @@
                     <span>New</span>
 
                 </a>
-                <a class="navbar-item" [routerLink]="['s/collections']">
+                <a *ngIf="isAuthenticated$ |async" class="navbar-item" [routerLink]="['s/collections']">
                     <span class="material-icons icon">
                         account_circle
                     </span>
@@ -37,15 +37,38 @@
 
                 </a>
             </div>
-            <div class="navbar-end">
-                <div class="navbar-item" (click)="toggleNavbar()">
-                    <a class="button is-medium">
+            <div class="navbar-end" (click)="toggleNavbar()">
+                <div *ngIf="isAuthenticated$ |async then authtemplate else notauthtemplate"></div>
+
+                <ng-template #notauthtemplate>
+                    <a (click)="logIn()" class="button is-medium">
                         <span class="material-icons icon">
                             login
                         </span>
-                        <span>Login</span>
+                        <span>Log In</span>
                     </a>
-                </div>
+                </ng-template>
+
+                <ng-template #authtemplate>
+                    <div class="navbar-item">
+                        <div class="profile columns is-mobile" *ngIf="user$ |async as user">
+                            <span class="picture column is-narrow">
+                                <figure class="image is-32x32">
+                                    <img class="" [src]="user.picture" alt="user picture">
+                                </figure>
+                            </span>
+                            <span class="name column">{{user.name}}</span>
+                        </div>
+                    </div>
+                    <div class="navbar-item">
+                        <a (click)="logOut()" class="button is-medium">
+                            <span class="material-icons icon">
+                                logout
+                            </span>
+                            <span>Log Out</span>
+                        </a>
+                    </div>
+                </ng-template>
 
             </div>
         </div>

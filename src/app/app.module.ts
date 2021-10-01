@@ -11,6 +11,8 @@ import { CollectionsComponent } from './list/collections/collections.component';
 import { ApiRequestInterceptor } from './common/interceptors/api-request.interceptor';
 import { ViewListComponent } from './list/view-list/view-list.component';
 import { QrCodeModule } from 'ng-qrcode';
+import { AuthModule } from '@auth0/auth0-angular';
+import { environment } from 'src/environments/environment';
 
 @NgModule({
   declarations: [
@@ -26,7 +28,8 @@ import { QrCodeModule } from 'ng-qrcode';
     AppRoutingModule,
     ReactiveFormsModule,
     HttpClientModule,
-    QrCodeModule
+    QrCodeModule,
+    AuthModule.forRoot({...environment.auth0})
   ],
   providers: [
     { provide: HTTP_INTERCEPTORS, useClass: ApiRequestInterceptor, multi: true }

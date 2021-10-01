@@ -1,5 +1,6 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
+import { AuthGuard } from '@auth0/auth0-angular';
 import { LayoutComponent } from './layout/layout.component';
 import { CollectionsComponent } from './list/collections/collections.component';
 import { EditListComponent } from './list/edit-list/edit-list.component';
@@ -9,12 +10,12 @@ const routes: Routes = [
   {
     path: '', component: LayoutComponent, children: [
       { path: 's/edit', component: EditListComponent },
-      { path: 's/collections', component: CollectionsComponent },
+      { path: 's/collections', component: CollectionsComponent, canActivate: [AuthGuard] },
       { path: ':title', component: ViewListComponent },
       { path: '**', redirectTo: 's/edit' }
     ]
   }
-  
+
 ];
 
 @NgModule({
