@@ -5,7 +5,7 @@
 </div>
 <div class="container collections">
 
-    <a [routerLink]="['/edit']">
+    <a [routerLink]="['/s/edit']">
         <div class="collection collection-new column">
             <span class="material-icons has-text-centered">
                 add_circle
@@ -16,7 +16,7 @@
         </div>
     </a>
     <div *ngFor="let collection of collections$ |async">
-        <a [routerLink]="['edit']" [state]="collection">
+        <a [routerLink]="['/s/edit']" [state]="collection">
             <div class="collection collection-card card">
                 <div class="container">
                     <div class="links-count tag is-primary is-rounded is-size-6 has-text-weight-bold">

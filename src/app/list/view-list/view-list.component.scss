@@ -1,0 +1,18 @@
+.view{
+    display: grid;
+    grid-auto-flow: column;
+    justify-content: end;
+}
+
+.links-header{
+    
+    padding-top: 2rem;
+}
+.link-list{
+    display: grid;
+    gap: 2rem;
+}
+
+.description{
+    display: grid;
+}

@@ -9,6 +9,7 @@ import { ReactiveFormsModule } from '@angular/forms';
 import { NavBarComponent } from './nav-bar/nav-bar.component';
 import { CollectionsComponent } from './list/collections/collections.component';
 import { ApiRequestInterceptor } from './common/interceptors/api-request.interceptor';
+import { ViewListComponent } from './list/view-list/view-list.component';
 
 @NgModule({
   declarations: [
@@ -17,6 +18,7 @@ import { ApiRequestInterceptor } from './common/interceptors/api-request.interce
     EditListComponent,
     NavBarComponent,
     CollectionsComponent,
+    ViewListComponent,
   ],
   imports: [
     BrowserModule,
