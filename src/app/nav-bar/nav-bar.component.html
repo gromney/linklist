@@ -29,7 +29,7 @@
                     <span>My Collections</span>
 
                 </a>
-                <a class="navbar-item">
+                <a (click)="toggleAbout()" class="navbar-item">
                     <span class="material-icons icon">
                         help
                     </span>
@@ -74,3 +74,60 @@
         </div>
     </nav>
 </header>
+<div class="modal" [ngClass]="{ 'is-active' : isAboutActive }">
+    <div class="modal-background" (click)="toggleAbout()"></div>
+    <div class="modal-card">
+        <!-- <header class="modal-card-head">
+            <p class="modal-card-title">About Link List</p>
+            <button class="delete" aria-label="close" (click)="toggleAbout()"></button>
+        </header> -->
+        <section class="modal-card-body">
+            <div class="content">
+                <h2>Link List (the clone)</h2>
+                <p>Whith this app you can group links to share a single url
+                </p>
+                <h2>Why I make this app</h2>
+                <p>
+                    Since I had no portfolio or applications to show my technical skills, I decided to clone
+                    <a href="http://www.theurlist.com" target="_blank" rel="noopener noreferrer">The urlist</a>
+                    showing the different aspects of application development with which I am familiar.
+                    <br>
+                    You can see more about this project and the different approaches that I took in relation to the original project at
+                    <a href="http://www.github.com/gromney/linklist" target="_blank" rel="noopener noreferrer">Link List Frontend</a>
+                    and 
+                    <a href="http://www.github.com/gromney/linklist.api" target="_blank" rel="noopener noreferrer">Link List Backend</a>
+
+                </p>
+                <hr class="navbar-divider">
+                <h3>The stack</h3>
+                <h4>Backend:</h4>
+                <ul>
+                    <li>Dotnet core webapi (c#)</li>
+                    <li>MongoDb</li>
+                    <li>Auth0 authentication</li>
+                    <li>Github Actions (CI/CD)</li>
+                </ul>
+                <h4>Frontend</h4>
+                <ul>
+                    <li>Angular</li>
+                    <li>Bulma css</li>
+                </ul>
+                <hr class="navbar-divider">
+                <h3>Ready to hire me:</h3>
+                <p>Estoy disponible para trabajar en sus proyectos por favor contáctame
+                    <span>
+                        <a class="button" href="https://www.linkedin.com/in/gromney/" target="_blank">
+                            <span class="icon is-medium">
+                                <i class="fab fa-linkedin fa-2x"></i>
+                            </span>
+                        </a>
+                    </span>
+                </p>
+
+            </div>
+        </section>
+        <footer class="modal-card-foot">
+            <button (click)="toggleAbout()" class="button">Cancel</button>
+          </footer>
+    </div>
+</div>
