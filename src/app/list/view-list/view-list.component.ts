@@ -12,7 +12,7 @@ import { ILinkList } from 'src/app/models/link-list.model';
 })
 export class ViewListComponent implements OnInit {
   collection = new Observable<ILinkList>();
-
+  listView = true;
   constructor(private router: Router, private linkService: LinkListService) { }
 
   ngOnInit(): void {
@@ -29,11 +29,14 @@ export class ViewListComponent implements OnInit {
         // finalize(()=> this.router.navigate(['/',title]))
       )
   }
-
+  setView(val:boolean){
+    this.listView = val;
+  }
   getHref(url: string) {
     const href = /^https?/.test(url)? url:`//${url}`;
     return href;
-
   }
+
+  getCurrentRoute = () => window.location.href;
 
 }

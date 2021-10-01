@@ -10,6 +10,7 @@ import { NavBarComponent } from './nav-bar/nav-bar.component';
 import { CollectionsComponent } from './list/collections/collections.component';
 import { ApiRequestInterceptor } from './common/interceptors/api-request.interceptor';
 import { ViewListComponent } from './list/view-list/view-list.component';
+import { QrCodeModule } from 'ng-qrcode';
 
 @NgModule({
   declarations: [
@@ -24,7 +25,8 @@ import { ViewListComponent } from './list/view-list/view-list.component';
     BrowserModule,
     AppRoutingModule,
     ReactiveFormsModule,
-    HttpClientModule
+    HttpClientModule,
+    QrCodeModule
   ],
   providers: [
     { provide: HTTP_INTERCEPTORS, useClass: ApiRequestInterceptor, multi: true }
