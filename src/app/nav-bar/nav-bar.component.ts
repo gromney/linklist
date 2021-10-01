@@ -12,7 +12,7 @@ export class NavBarComponent implements OnInit {
   @ViewChild('navBurger') navBurger!: ElementRef;
   @ViewChild('navMenu') navMenu!: ElementRef;
 
-  isAboutActive = true;
+  isAboutActive = false;
   isAuthenticated$ = new Observable<boolean>();
   user$ = new Observable<any>()
   constructor(private auth: AuthService, @Inject(DOCUMENT) public doc: Document) { }

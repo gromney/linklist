@@ -11,7 +11,7 @@ import { CollectionsComponent } from './list/collections/collections.component';
 import { ApiRequestInterceptor } from './common/interceptors/api-request.interceptor';
 import { ViewListComponent } from './list/view-list/view-list.component';
 import { QrCodeModule } from 'ng-qrcode';
-import { AuthModule } from '@auth0/auth0-angular';
+import { AuthHttpInterceptor, AuthModule, HttpMethod } from '@auth0/auth0-angular';
 import { environment } from 'src/environments/environment';
 
 @NgModule({
@@ -29,10 +29,23 @@ import { environment } from 'src/environments/environment';
     ReactiveFormsModule,
     HttpClientModule,
     QrCodeModule,
-    AuthModule.forRoot({...environment.auth0})
+    AuthModule.forRoot({
+      ...environment.auth0,
+      httpInterceptor: {
+        allowedList: [{
+          uri: `${environment.apiUrl}/*`,
+          tokenOptions: { audience: environment.audience }
+        },
+        { uri: `${environment.apiUrl}/linklist`, httpMethod: HttpMethod.Post },
+        { uri: `${environment.apiUrl}/linklist`, httpMethod: HttpMethod.Put },
+        { uri: `${environment.apiUrl}/linklist`, httpMethod: HttpMethod.Get },
+        ]
+      }
+    })
   ],
   providers: [
-    { provide: HTTP_INTERCEPTORS, useClass: ApiRequestInterceptor, multi: true }
+    { provide: HTTP_INTERCEPTORS, useClass: ApiRequestInterceptor, multi: true },
+    { provide: HTTP_INTERCEPTORS, useClass: AuthHttpInterceptor, multi: true }
   ],
   bootstrap: [AppComponent]
 })
