@@ -21,11 +21,18 @@ export class EditListComponent implements OnInit {
 
   constructor(private fb: FormBuilder, private http: HttpClient, private route: Router, private el: ElementRef, private linkService: LinkListService, @Inject(DOCUMENT) public doc: Document) {
 
+    this.buildForm();
+
+  }
+
+  private buildForm() {
+
     this.editForm = this.fb.group({
+      id: [],
       title: ['', {
         validators: [Validators.required, Validators.pattern(titleRegex)
         ],
-        asyncValidators: [avaliableValidator(linkService)],
+        asyncValidators: [avaliableValidator(this.linkService)],
         updateOn: 'blur'
       }],
       description: [''],
@@ -33,9 +40,12 @@ export class EditListComponent implements OnInit {
       links: this.fb.array([], Validators.required)
     });
 
+    //update mode
     let collection = this.route.getCurrentNavigation()?.extras.state as ILinkList;
     if (collection) {
       this.updateMode = true;
+      // this.editForm.setControl('editForm', this.fb.group(collection));
+      this.editForm.setControl('id', this.fb.control(collection.id))
       this.editForm.setControl('title', this.fb.control({ value: collection.title, disabled: true }, []));
 
       let links = collection.links ? collection.links : [];
@@ -43,6 +53,7 @@ export class EditListComponent implements OnInit {
       this.editForm.controls.description.setValue(collection.description);
 
       this.editForm.setControl('links', this.fb.array(links));
+
     }
 
   }
@@ -67,19 +78,40 @@ export class EditListComponent implements OnInit {
   }
 
   onPublish() {
+    if (this.updateMode) {
+      const title = this.editForm.controls.title.value;
+      console.log(title,this.editForm.value);
+      
+      this.linkService.update$(title,this.editForm.value)
+        .pipe(
+          finalize(() => {
+            this.route.navigate(['/',title])
+          })
+        )
+        .subscribe(
+          res => console.log('RESPONSE:',res),
+          err => console.log('ERRROS:',err),
+          () => console.log('COMPLETE'),
+          
+        )
 
-    this.linkService.publish$(this.editForm.value)
-      .pipe(
-        finalize(() => {
-          this.route.navigate(['/', this.title]);
-          this.clearForm()
-        })
-      )
-      .subscribe(
-        res => console.log('RESPONSE:', res),
-        err => console.log('ERROR:', err),
-        () => console.log('COMPLETE')
-      );
+    } else {
+
+      // this.linkService.publish$(this.editForm.value)
+      //   .pipe(
+      //     finalize(() => {
+      //       this.route.navigate(['/', this.title]);
+      //       this.clearForm()
+      //     })
+      //   )
+      //   .subscribe(
+      //     res => console.log('RESPONSE:', res),
+      //     err => console.log('ERROR:', err),
+      //     () => console.log('COMPLETE')
+      //   );
+    }
+
+
   }
 
   public get linkList(): FormArray {

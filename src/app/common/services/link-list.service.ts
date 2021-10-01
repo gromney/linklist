@@ -4,14 +4,18 @@ import { ILinkList } from 'src/app/models/link-list.model';
 import { environment } from 'src/environments/environment';
 
 @Injectable({
-    providedIn:'root'
+    providedIn: 'root'
 })
 export class LinkListService {
-    constructor(private http: HttpClient){}
+    constructor(private http: HttpClient) { }
 
     getAll$ = this.http.get<ILinkList[]>(`${environment.apiUrl}/linklist`);
 
-    available$ =(title:string) => this.http.get<boolean>(`${environment.apiUrl}/LinkList/available/${title}`);
+    getCollection$ = (title: string) => this.http.get<ILinkList>(`${environment.apiUrl}/linklist/${title}`)
 
-    publish$ = (list: ILinkList) => this.http.post(`${environment.apiUrl}/LinkList`,list);
+    available$ = (title: string) => this.http.get<boolean>(`${environment.apiUrl}/LinkList/available/${title}`);
+
+    publish$ = (list: ILinkList) => this.http.post(`${environment.apiUrl}/LinkList`, list);
+
+    update$ = (title:string,list: ILinkList) => this.http.put(`${environment.apiUrl}/LinkList/${title}`,list)
 }
