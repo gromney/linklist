@@ -32,13 +32,8 @@ import { environment } from 'src/environments/environment';
     AuthModule.forRoot({
       ...environment.auth0,
       httpInterceptor: {
-        allowedList: [{
-          uri: `${environment.apiUrl}/*`,
-          tokenOptions: { audience: environment.audience }
-        },
-        { uri: `${environment.apiUrl}/linklist`, httpMethod: HttpMethod.Post },
-        { uri: `${environment.apiUrl}/linklist`, httpMethod: HttpMethod.Put },
-        { uri: `${environment.apiUrl}/linklist`, httpMethod: HttpMethod.Get },
+        allowedList: [
+          { uri: `${environment.apiUrl}/*` }
         ]
       }
     })

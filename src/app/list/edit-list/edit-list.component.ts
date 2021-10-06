@@ -104,7 +104,6 @@ export class EditListComponent implements OnInit {
           finalize(() => {
             this.route.navigate(['/', keepedTitle]);
             console.log('NAVEGAR A LA LISTA');
-            debugger;
             // this.clearForm()
           })
         )
