@@ -2,6 +2,7 @@ import { HttpEvent, HttpHandler, HttpInterceptor, HttpRequest } from '@angular/c
 import { Injectable, OnInit } from '@angular/core';
 import { Observable } from 'rxjs';
 import { delay, finalize, retry, tap, timeout } from 'rxjs/operators';
+import { environment } from 'src/environments/environment';
 import { LoadingService } from '../services/loading.service';
 
 @Injectable()
@@ -15,7 +16,7 @@ export class ApiRequestInterceptor implements HttpInterceptor,OnInit {
     
     intercept(req: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
         
-        if (req.url.startsWith('https://localhost:5001/api')) {
+        if (req.url.startsWith(environment.apiUrl)) {
 
             let apiReq = req.clone();
             this.loadingService.show();

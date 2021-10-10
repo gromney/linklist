@@ -1,6 +1,6 @@
-import { HttpClient } from '@angular/common/http';
 import { Component, OnInit } from '@angular/core';
 import { Observable } from 'rxjs';
+import { LinkListService } from 'src/app/common/services/link-list.service';
 import { ILinkList } from 'src/app/models/link-list.model';
 
 @Component({
@@ -10,15 +10,15 @@ import { ILinkList } from 'src/app/models/link-list.model';
 })
 export class CollectionsComponent implements OnInit {
   collections$ = new Observable<ILinkList[]>();
-  constructor(private http: HttpClient) { }
+  constructor(private linkService: LinkListService) { }
 
   ngOnInit(): void {
-    this.collections$ = this.http.get<ILinkList[]>('https://localhost:5001/api/linklist');
+    this.collections$ = this.linkService.getAll$;
 
   }
 
-  onEdit(collection:ILinkList){
-    
+  onEdit(collection: ILinkList) {
+
   }
 
 }
