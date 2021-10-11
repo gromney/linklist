@@ -84,7 +84,6 @@ export class EditListComponent implements OnInit {
     const keepedTitle = this.editForm.controls.title.value;
 
     if (this.updateMode) {
-
       this.linkService.update$(keepedTitle, this.editForm.value)
         .pipe(
           finalize(() => {
@@ -105,7 +104,6 @@ export class EditListComponent implements OnInit {
           finalize(() => {
             this.route.navigate(['/', keepedTitle]);
             console.log('NAVEGAR A LA LISTA');
-            // this.clearForm()
           })
         )
         .subscribe(
