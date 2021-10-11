@@ -33,7 +33,8 @@ import { environment } from 'src/environments/environment';
       ...environment.auth0,
       httpInterceptor: {
         allowedList: [
-          { uri: `${environment.apiUrl}/*` }
+          { uri: `${environment.apiUrl}/linklist/available/*`, allowAnonymous: true,httpMethod:HttpMethod.Get },
+          { uri: `${environment.apiUrl}/linklist`, httpMethod:HttpMethod.Get }
         ]
       }
     })
