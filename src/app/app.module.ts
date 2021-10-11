@@ -34,8 +34,9 @@ import { DragDropModule } from "@angular/cdk/drag-drop";
       ...environment.auth0,
       httpInterceptor: {
         allowedList: [
-          { uri: `${environment.apiUrl}/linklist/available/*`, allowAnonymous: true,httpMethod:HttpMethod.Get },
-          { uri: `${environment.apiUrl}/linklist`, httpMethod:HttpMethod.Get }
+          { uri: `${environment.apiUrl}/*`, httpMethod: HttpMethod.Put },
+          { uri: `${environment.apiUrl}/linklist/available/*`, allowAnonymous: true, httpMethod: HttpMethod.Get },
+          { uri: `${environment.apiUrl}/linklist`, httpMethod: HttpMethod.Get },
         ]
       }
     })
