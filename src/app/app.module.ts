@@ -13,7 +13,7 @@ import { ViewListComponent } from './list/view-list/view-list.component';
 import { QrCodeModule } from 'ng-qrcode';
 import { AuthHttpInterceptor, AuthModule, HttpMethod } from '@auth0/auth0-angular';
 import { environment } from 'src/environments/environment';
-
+import { DragDropModule } from "@angular/cdk/drag-drop";
 @NgModule({
   declarations: [
     AppComponent,
@@ -29,6 +29,7 @@ import { environment } from 'src/environments/environment';
     ReactiveFormsModule,
     HttpClientModule,
     QrCodeModule,
+    DragDropModule,
     AuthModule.forRoot({
       ...environment.auth0,
       httpInterceptor: {

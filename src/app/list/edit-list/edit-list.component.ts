@@ -1,9 +1,10 @@
+import { CdkDragDrop } from '@angular/cdk/drag-drop';
 import { DOCUMENT } from '@angular/common';
 import { HttpClient } from '@angular/common/http';
-import { Component, ElementRef, Inject, Input, OnInit, ViewChild } from '@angular/core';
+import { Component, ElementRef, Inject, OnInit } from '@angular/core';
 import { AbstractControl, AsyncValidatorFn, FormArray, FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
-import { ActivatedRoute, Router } from '@angular/router';
-import { finalize, map, tap } from 'rxjs/operators';
+import { Router } from '@angular/router';
+import { finalize, map } from 'rxjs/operators';
 import { LinkListService } from 'src/app/common/services/link-list.service';
 import { LoadingService } from 'src/app/common/services/loading.service';
 import { ILinkList } from 'src/app/models/link-list.model';
@@ -117,6 +118,20 @@ export class EditListComponent implements OnInit {
 
   }
 
+  drop(event:CdkDragDrop<string[]>){
+    this.moveItemInFormArray(event.previousIndex,event.currentIndex)
+  }
+  private moveItemInFormArray(from:number,to:number){
+    if(from === to)
+      return;
+
+    const prev = this.linkList.at(from);
+    const curr = this.linkList.at(to);
+
+    this.linkList.setControl(to,prev);
+    this.linkList.setControl(from,curr);
+
+  }
   public get linkList(): FormArray {
     return this.editForm.get('links') as FormArray;
   }
@@ -129,13 +144,6 @@ export class EditListComponent implements OnInit {
     return control;
   }
 
-  private clearForm() {
-    this.editForm.reset();
-    this.editForm.setControl('links', this.fb.array([]));
-
-    const control = this.el.nativeElement.querySelector('[formcontrolname="url_input"');
-    control.focus();
-  }
 
   get title() {
     return this.editForm.controls['title'];
