@@ -22,7 +22,6 @@ export class ApiRequestInterceptor implements HttpInterceptor,OnInit {
             this.loadingService.show();
             return next.handle(apiReq)
                 .pipe(
-                    retry(2),
                     finalize(() => this.loadingService.hide())
                 );
         }
